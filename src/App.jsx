@@ -8,17 +8,17 @@ import "./App.css"
 export const App = () => {
 
   const [jokeInput, setJokeInput] = useState("")
-  const [savedJoke, setSavedJoke] = useState("")
+  const [jokeToSave, setJokeToSave] = useState("")
 
 
   useEffect(() => {
-    if (savedJoke.trimStart()) {
-      postNewJoke(savedJoke)
+    if (jokeToSave.trimStart()) {
+      postNewJoke(jokeToSave)
     }
     
     setJokeInput("")
     console.log("saved Joke event triggered")
-  }, [savedJoke])
+  }, [jokeToSave])
 
   return <>
     <div className="app-container">
@@ -43,7 +43,7 @@ export const App = () => {
       <button
         className="joke-input-submit"
         onClick={() => {
-          setSavedJoke(jokeInput)
+          setJokeToSave(jokeInput)
         }}>Add</button>
       </div>
     

@@ -1,6 +1,7 @@
 export const postNewJoke = (newJokeText) => {
 
     const newJoke = {
+        
         text: newJokeText,
         told: false
     }

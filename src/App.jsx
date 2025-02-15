@@ -67,7 +67,9 @@ export const App = () => {
       </div>
     <div className="joke-lists-container">
       <div className="joke-list-container">
-        <h2>Untold</h2>
+        <h2>Untold
+          <span className="untold-count">{untoldJokes.length}</span>
+        </h2>
         {untoldJokes.map(joke => {
           return (
             <li className="joke-list-item" key={joke.id}>
@@ -78,7 +80,9 @@ export const App = () => {
 
       </div>
       <div className="joke-list-container">
-        <h2>Told</h2>
+        <h2>Told
+          <span className="told-count">{toldJokes.length}</span>
+        </h2>
         {toldJokes.map(joke => {
           return (
             <li className="joke-list-item" key={joke.id}>

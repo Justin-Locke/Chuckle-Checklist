@@ -1,8 +1,8 @@
+import "./App.css"
+import stevePic from "./assets/steve.png"
 import { useState } from "react"
 import { useEffect } from "react"
 import { postNewJoke } from "./services/jokeService"
-import stevePic from "./assets/steve.png"
-import "./App.css"
 
 
 export const App = () => {
@@ -23,13 +23,12 @@ export const App = () => {
   return <>
     <div className="app-container">
       <div className="app-heading">
-      <div className="app-heading-circle">
-   <img className="app-logo" src={stevePic} alt="Good job Steve" />
- </div>
+        <div className="app-heading-circle">
+          <img className="app-logo" src={stevePic} alt="Good job Steve" />
+        </div>
         <h1 className="app-heading-text">Chuckle Checklist</h1>
       </div>
         <h2>Add Joke</h2>
-
       <div className="joke-add-form">
         <input
         className="joke-input"

@@ -1,15 +1,36 @@
-import "./App.css"
 import stevePic from "./assets/steve.png"
 import { useState } from "react"
 import { useEffect } from "react"
-import { postNewJoke } from "./services/jokeService"
+import { getAllJokes, postNewJoke } from "./services/jokeService"
+import "./App.css"
 
 
 export const App = () => {
 
   const [jokeInput, setJokeInput] = useState("")
   const [jokeToSave, setJokeToSave] = useState("")
+  const [allJokes, setAllJokes] = useState([])
+  const [untoldJokes, setUntoldJokes] = useState([])
+  const [toldJokes, setToldJokes] = useState([])
 
+
+  useEffect(() => {
+    getAllJokes().then(jokesArray => {
+      setAllJokes(jokesArray)
+      console.log("All Jokes Set")
+    })
+  }, [])
+
+  useEffect(() => {
+    const toldJokes = allJokes.filter(
+      (joke) => joke.told === true
+    )
+    const untoldJokes = allJokes.filter(
+      (joke) => joke.told === false
+    )
+    setToldJokes(toldJokes)
+    setUntoldJokes(untoldJokes)
+  }, [allJokes])
 
   useEffect(() => {
     if (jokeToSave.trimStart()) {
@@ -17,7 +38,6 @@ export const App = () => {
     }
     
     setJokeInput("")
-    console.log("saved Joke event triggered")
   }, [jokeToSave])
 
   return <>
@@ -45,7 +65,30 @@ export const App = () => {
           setJokeToSave(jokeInput)
         }}>Add</button>
       </div>
-    
+    <div className="joke-lists-container">
+      <div className="joke-list-container">
+        <h2>Untold</h2>
+        {untoldJokes.map(joke => {
+          return (
+            <li className="joke-list-item" key={joke.id}>
+              <p className="joke-list-item-text">{joke.text}</p>
+            </li>
+          )
+        })}
+
+      </div>
+      <div className="joke-list-container">
+        <h2>Told</h2>
+        {toldJokes.map(joke => {
+          return (
+            <li className="joke-list-item" key={joke.id}>
+              <p className="joke-list-item-text">{joke.text}</p>
+            </li>
+          )
+        })}
+      </div>
+
+    </div>
   </div>
   </>
 }

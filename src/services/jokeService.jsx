@@ -1,7 +1,7 @@
 export const postNewJoke = (newJokeText) => {
 
     const newJoke = {
-        
+
         text: newJokeText,
         told: false
     }
@@ -16,4 +16,8 @@ export const postNewJoke = (newJokeText) => {
 
     console.log("New Joke Added To Database")
 
+}
+
+export const getAllJokes = () => {
+    return fetch("http://localhost:8088/jokes").then((res => res.json()))
 }

@@ -13,13 +13,14 @@ export const App = () => {
   const [untoldJokes, setUntoldJokes] = useState([])
   const [toldJokes, setToldJokes] = useState([])
 
+  
 
   useEffect(() => {
     getAllJokes().then(jokesArray => {
       setAllJokes(jokesArray)
       console.log("All Jokes Set")
     })
-  }, [])
+  }, [jokeToSave])
 
   useEffect(() => {
     const toldJokes = allJokes.filter(

@@ -1,8 +1,9 @@
 import stevePic from "./assets/steve.png"
 import { useState } from "react"
 import { useEffect } from "react"
-import { getAllJokes, postNewJoke } from "./services/jokeService"
+import { getAllJokes, postNewJoke, updateJoke } from "./services/jokeService"
 import "./App.css"
+
 
 
 export const App = () => {
@@ -12,15 +13,43 @@ export const App = () => {
   const [allJokes, setAllJokes] = useState([])
   const [untoldJokes, setUntoldJokes] = useState([])
   const [toldJokes, setToldJokes] = useState([])
-
+  const [jokeToUpdate, setJokeToUpdate] = useState()
+  const [lastUpdatedJoke, setLastUpdatedJoke] = useState()
   
-
-  useEffect(() => {
+  const fetchJokes = () => {
     getAllJokes().then(jokesArray => {
       setAllJokes(jokesArray)
       console.log("All Jokes Set")
     })
-  }, [jokeToSave])
+  }
+
+  const handleJokeToldChange = async (joke) => {
+    
+    if (joke) {
+      const updatedJoke = {
+        ...joke,
+        told: !joke.told
+      }
+      
+      try {
+        await updateJoke(updatedJoke);
+        setLastUpdatedJoke(updatedJoke);
+        console.log("Joke just updated.")
+      } catch (error) {
+        console.error("Error updating joke:", error);
+      }
+      
+    }
+    
+  }
+
+  useEffect(() => {
+    handleJokeToldChange(jokeToUpdate)
+  }, [jokeToUpdate])
+
+  useEffect(() => {
+    fetchJokes();
+  }, [jokeToSave, lastUpdatedJoke])
 
   useEffect(() => {
     const toldJokes = allJokes.filter(
@@ -75,6 +104,12 @@ export const App = () => {
           return (
             <li className="joke-list-item" key={joke.id}>
               <p className="joke-list-item-text">{joke.text}</p>
+              <div>
+                <button 
+                className="joke-list-action-toggle"
+                onClick={() => setJokeToUpdate(joke)}
+                ><i className="fa-regular fa-face-smile" /></button>
+              </div>
             </li>
           )
         })}
@@ -88,6 +123,12 @@ export const App = () => {
           return (
             <li className="joke-list-item" key={joke.id}>
               <p className="joke-list-item-text">{joke.text}</p>
+              <div>
+                <button 
+                className="joke-list-action-toggle"
+                onClick={() => setJokeToUpdate(joke)}
+                ><i className="fa-regular fa-face-meh" /></button>
+              </div>
             </li>
           )
         })}

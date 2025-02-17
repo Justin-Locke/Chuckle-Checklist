@@ -6,7 +6,7 @@ export const postNewJoke = (newJokeText) => {
         told: false
     }
     
-    fetch("http://localhost:8088/jokes", {
+    return fetch("http://localhost:8088/jokes", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -14,7 +14,6 @@ export const postNewJoke = (newJokeText) => {
         body: JSON.stringify(newJoke)
     });
 
-    console.log("New Joke Added To Database")
 
 }
 
@@ -32,4 +31,14 @@ export const updateJoke = (updatedJoke) => {
         body: JSON.stringify(updatedJoke)
     })
 
+}
+
+export const deleteJoke = (jokeToDelete) => {
+
+    return fetch(`http://localhost:8088/jokes/${jokeToDelete.id}`, {
+        method: "DELETE",
+        headers: {
+            "Content-Type": "application/json"
+        }
+    })
 }

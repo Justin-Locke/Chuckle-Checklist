@@ -1,7 +1,7 @@
 import stevePic from "./assets/steve.png"
 import { useState } from "react"
 import { useEffect } from "react"
-import { getAllJokes, postNewJoke, updateJoke } from "./services/jokeService"
+import { deleteJoke, getAllJokes, postNewJoke, updateJoke } from "./services/jokeService"
 import "./App.css"
 
 
@@ -13,8 +13,9 @@ export const App = () => {
   const [allJokes, setAllJokes] = useState([])
   const [untoldJokes, setUntoldJokes] = useState([])
   const [toldJokes, setToldJokes] = useState([])
-  const [jokeToUpdate, setJokeToUpdate] = useState()
-  const [lastUpdatedJoke, setLastUpdatedJoke] = useState()
+  const [jokeToUpdate, setJokeToUpdate] = useState(null)
+  const [lastUpdatedJoke, setLastUpdatedJoke] = useState(null)
+  const [jokeToDelete, setJokeToDelete] = useState(null)
   
   const fetchJokes = () => {
     getAllJokes().then(jokesArray => {
@@ -22,6 +23,18 @@ export const App = () => {
       console.log("All Jokes Set")
     })
   }
+
+  const handleSaveJoke = async () => {
+    if (jokeToSave.trimStart()) {
+      try {
+        await postNewJoke(jokeToSave)
+        setJokeInput("")
+        setLastUpdatedJoke(jokeToSave)
+      } catch (error) {
+        console.error("Error saving joke:", error)
+      }
+  }
+}
 
   const handleJokeToldChange = async (joke) => {
     
@@ -43,13 +56,29 @@ export const App = () => {
     
   }
 
+  const handleDeleteJoke = async () => {
+    if (jokeToDelete) {
+      try {
+        await deleteJoke(jokeToDelete)
+        setLastUpdatedJoke(jokeToDelete)
+      } catch (error) {
+        console.error("Error deleting joke:", error)
+      }
+    }
+  }
+
+  useEffect(() => {
+    handleDeleteJoke(jokeToDelete)
+    
+  }, [jokeToDelete])
+
   useEffect(() => {
     handleJokeToldChange(jokeToUpdate)
   }, [jokeToUpdate])
 
   useEffect(() => {
     fetchJokes();
-  }, [jokeToSave, lastUpdatedJoke])
+  }, [lastUpdatedJoke])
 
   useEffect(() => {
     const toldJokes = allJokes.filter(
@@ -63,11 +92,7 @@ export const App = () => {
   }, [allJokes])
 
   useEffect(() => {
-    if (jokeToSave.trimStart()) {
-      postNewJoke(jokeToSave)
-    }
-    
-    setJokeInput("")
+    handleSaveJoke()
   }, [jokeToSave])
 
   return <>
@@ -105,6 +130,12 @@ export const App = () => {
             <li className="joke-list-item" key={joke.id}>
               <p className="joke-list-item-text">{joke.text}</p>
               <div>
+                <button
+                className="joke-list-action-delete"
+                onClick={() => setJokeToDelete(joke)}
+                ><i className="fa-regular fa-trash-can" />
+
+                </button>
                 <button 
                 className="joke-list-action-toggle"
                 onClick={() => setJokeToUpdate(joke)}
@@ -124,6 +155,12 @@ export const App = () => {
             <li className="joke-list-item" key={joke.id}>
               <p className="joke-list-item-text">{joke.text}</p>
               <div>
+                <button
+                className="joke-list-action-delete"
+                onClick={() => setJokeToDelete(joke)}
+                ><i className="fa-regular fa-trash-can" />
+
+                </button>
                 <button 
                 className="joke-list-action-toggle"
                 onClick={() => setJokeToUpdate(joke)}
@@ -138,3 +175,4 @@ export const App = () => {
   </div>
   </>
 }
+
